@@ -67,20 +67,34 @@ const app = express();
 
 
 
-const { Adminauth } = require('./middlewares/auth');
+// const { Adminauth } = require('./middlewares/auth');
 
-app.use("/admin", Adminauth);
+// app.use("/admin", Adminauth);
 
 
-app.get("/user", (req, res) => {
-    res.send("Welcome to the admin panel");
+// app.get("/user", (req, res) => {
+//     res.send("Welcome to the admin panel");
+// });
+
+// app.get ("/admin/getAllData ",  (req, res) => {
+//     res.send("Here is all the admin data");
+// });
+
+
+app.get("/getuserdata", (req, res, next) => {
+  try {
+    throw new Error("Database connection failed");
+  } catch (err) {
+    next(err); // Pass the error to the error handler
+  }
 });
 
-app.get ("/admin/getAllData ",  (req, res) => {
-    res.send("Here is all the admin data");
+// Centralized error-handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.message);
+  res.status(500).send("Something went wrong");
 });
-
 
 app.listen(7272, () => {
-    console.log('Server is running on port 7272');
-})
+  console.log('Server is running on port 7272');
+});
