@@ -18,6 +18,33 @@ try {
 }
 });
 
+app.get("/user", async (req, res) => {
+    const UserModelEmail = req.body.Email;
+    try {
+const User = await UserModel.findOne({Email: UserModelEmail}).exec();
+res.send(User);
+
+//           const user = await UserModel.find({Email: req.body.Email });
+// if (UserModelEmail.length === 0) {
+//     return res.status(404).send("User not found");
+// } else {
+//           res.send(user)
+// }
+    } catch (err) {
+        res.status(400).send("Error fetching user");
+    }
+    
+});
+app.get("/feed", async (req, res) => {
+   try {
+const UserModelEmail = await UserModel.find({});
+res.send(UserModelEmail);
+   }
+   catch (err) {
+        res.status(400).send("Error fetching user");
+    }
+});
+
 connectDB().then(() => {
     console.log("Database connected successfully");
     app.listen(7272, () => {
