@@ -45,7 +45,12 @@ const userSchema = mongoose.Schema({
     },
     skills : {
         type: [String],
+        Validate(value) {
+            if(value.length > 5){
+                throw new Error("Skills count exceeds the limit");
+            }
     },
+},
 },
     {
     timestamps : true,
