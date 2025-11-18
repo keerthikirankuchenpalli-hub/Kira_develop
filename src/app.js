@@ -45,6 +45,46 @@ res.send(UserModelEmail);
     }
 });
 
+app.delete("/user/:id", async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const user = await UserModel.findByIdAndDelete(id);
+
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+
+        res.send("User deleted successfully");
+
+    } catch (err) {
+        res.status(500).send("SOMETHING WENT WRONG");
+    }
+});
+
+
+app.patch("/user/:id", async (req, res) => {
+    const userId = req.params.id;   // FIXED
+    const data = req.body;
+
+    try {
+        const user = await UserModel.findByIdAndUpdate(
+            userId, 
+            data, 
+           { returnDocument: "after",
+            runValidators : true }
+);
+ console.log(user);
+
+
+        res.send("user update successfully");  // send updated user
+    } catch (err) {
+        res.status(400).send("Update not allowed");
+    }
+});
+
+
+
 connectDB().then(() => {
     console.log("Database connected successfully");
     app.listen(7272, () => {
