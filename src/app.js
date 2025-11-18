@@ -64,49 +64,56 @@ app.delete("/user/:id", async (req, res) => {
 
 
 app.patch("/user/:id", async (req, res) => {
-    const userId = req.params?.id;   // FIXED
+    const userId = req.params?.id;
     const data = req.body;
-try{
-    const ALLOWED_UPDATES = [
-       
-        "FirstName",
-         "LastName", 
-         "Password", 
-         "age",
-         "skills", 
-         "gender"
+
+    try {
+        const ALLOWED_UPDATES = [
+            "FirstName",
+            "LastName",
+            "Password",
+            "age",
+            "skills",
+            "gender",
+            "photoUrl"
         ];
 
-
-    const isUpdateAllowed = Object.keys(data).every((k) =>
-        ALLOWED_UPDATES.includes(k));
-    if (!isUpdateAllowed) {
-       throw new Error("Update not allowed");
-    }
-    if (data?. skills.length > 5){
-        throw new Error("Skills count exceeds the limit");
-    }
-     const user = await UserModel.findByIdAndUpdate(
-           userId, 
-            data, 
-            { 
-               new: true,
-               runValidators : true, 
-            }
+        const isUpdateAllowed = Object.keys(data).every((k) =>
+            ALLOWED_UPDATES.includes(k)
         );
- 
-        if (!user) {
-            return res.status(404).json({ error: "User not found" });
+
+        if (!isUpdateAllowed) {
+            throw new Error("Update not allowed");
         }
 
-        console.log(user); // For debugging, can remove in production
+        if (data?.skills && data.skills.length > 5) {
+            throw new Error("Skills count exceeds the limit");
+        }
 
-        res.status(200).json({ message: "User updated successfully", user });
+        const user = await UserModel.findByIdAndUpdate(
+            userId,
+            data,
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+        if (!user) {
+            return res.status(404).send({ error: "User not found" });
+        }
+
+        res.status(200).send({
+            message: "User updated successfully",
+            user
+        });
+
     } catch (err) {
-        console.error(err);  // Log the error for debugging
-        res.status(400).json({ error: "Update failed: " + err.message });
+        console.error(err);
+        res.status(400).send({ error: "Update failed: " + err.message });
     }
 });
+
 
 
 connectDB().then(() => {
