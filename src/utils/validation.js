@@ -42,4 +42,22 @@ const validateSignUpData = (req) => {
     // You can add optional validations for age, gender, skills, etc.
 };
 
-module.exports = { validateSignUpData };
+const validateEditProfileData = (req) => {
+    const allowedEditFields = [
+        "FirstName",
+        "LastName",
+        "age",
+        "gender",
+        "photoUrl",
+        "about",
+        "skills"
+    ];
+   const isEditAllowed = Object.keys(req.body).every((field) => allowedEditFields.includes(field)
+);
+
+return isEditAllowed;
+}
+
+
+
+module.exports = { validateSignUpData, validateEditProfileData };
