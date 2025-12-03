@@ -66,6 +66,51 @@ if (existingRequest) {  // Check if the request already exists
  }
 });
 
+requestRouter.post("/request/review/:status/:requestId", userAuth, 
+    async (req, res) => {
+        
+     try {
+        const loggedInUser = req.user;
+        const {status, requestId} = req.params;
+
+        const allowedStatus = [ "accepted", "rejected" ];
+
+        if (!allowedStatus.includes(status)) {
+            return res
+            .status(400)
+            .json({ error: 'Invalid status type.' + status });
+        }
+
+        const connectionRequest = await ConnectionRequest
+        .findOne({ _id: requestId,
+            toUserId: loggedInUser._id,
+            status: 'interested'
+        });
+        if (!connectionRequest) {
+            return res
+            .status(404)
+            .json({ message: 'Connection request not found or already reviewed.' });
+        }
+
+
+        connectionRequest.status = status;
+
+        const data = await connectionRequest.save();
+        res.status(200).json({
+            message: `Connection request ${status} successfully.`,
+            data,
+        });
+
+
+     }catch (err) {
+        res.status(400).send("ERROR:" + err.message);
+     }
+
+console.log(req.user);    
+
+});
+
+
 module.exports = requestRouter;
 
 
