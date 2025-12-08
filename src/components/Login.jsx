@@ -8,6 +8,7 @@ import { BASE_URL } from "../utils/constants";
 const Login = () => {
   const [Email, setEmail] = useState("rahul@gmail.com");
   const [Password, setPassword] = useState("Rahul@1997");
+   const [errorMessage, setErrorMessage] = useState("");
   const dispatch = useDispatch();
  const navigate = useNavigate ();
   const handleLogin = async () => {
@@ -27,6 +28,7 @@ const Login = () => {
 
     } catch (err) {
       console.error(err);
+       setErrorMessage("Invalid email or password. Please try again.");
     }
   };
 
@@ -55,11 +57,17 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>
-
+          <div> 
+     
+          {/* Conditionally render error message */}
+          {errorMessage && (
+            <p className="text-red-500">{errorMessage}</p> // Display error message if set
+          )}
           <div className="card-actions justify-center">
             <button className="btn btn-base-100" onClick={handleLogin}>
               Login
             </button>
+            </div>
           </div>
         </div>
       </div>
