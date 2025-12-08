@@ -1,18 +1,18 @@
 import { useSelector } from "react-redux";
 
 const Profile = () => {
+  const stateUser = useSelector((state) => state.user);   // get the slice
+  const user = stateUser?.user;                            // optional chaining
 
-  const user = useSelector((state) => state.user.user);
+  if (!user) {
+    return <div>Loading user info or please login...</div>;
+  }
 
   return (
     <div>
       <h1>User Profile</h1>
-
-      {user ? (
-        <p>Email: {user.Email}</p>
-      ) : (
-        <p>No user logged in</p>
-      )}
+      <p>Email: {user.Email}</p>
+      <p>Name: {user.FirstName} {user.LastName}</p>
     </div>
   );
 };
