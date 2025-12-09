@@ -64,7 +64,7 @@ const Login = () => {
             <p className="text-red-500">{errorMessage}</p> // Display error message if set
           )}
           <div className="card-actions justify-center">
-            <button className="btn btn-base-100" onClick={handleLogin}>
+            <button className="btn btn-primary bg-primary" onClick={handleLogin}>
               Login
             </button>
             </div>

@@ -1,5 +1,7 @@
 import { useSelector } from "react-redux";
 
+
+
 const Profile = () => {
   const stateUser = useSelector((state) => state.user);   // get the slice
   const user = stateUser?.user;                            // optional chaining

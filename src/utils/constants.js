@@ -1,1 +1,2 @@
-export const BASE_URL = "http://localhost:7272"; 
+export const BASE_URL = "http://localhost:7272";
+
