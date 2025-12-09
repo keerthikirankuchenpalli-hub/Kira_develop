@@ -38,19 +38,16 @@ authRouter.post("/login", async (req, res) => {
     try {
         const { Email, Password } = req.body;
 
-        // 1. Find user by email
-        // console.log("Login attempt for email:", Email);
         const user = await UserModel.findOne({ Email });
-        // console.log("User found:", user);
+      
 
         if (!user) {
             throw new Error("invalid credentials");
         }
 
-        // 2. Compare password
+        
         const isPasswordValid = await user.validatePassword(Password);
-        // console.log("Password valid:", isPasswordValid);
-
+        
         if (!isPasswordValid) {
 
             throw new Error("invalid credentials");
@@ -58,12 +55,13 @@ authRouter.post("/login", async (req, res) => {
         }
         const token = await user.getJWT();
       
-        // console.log("Generated Token:", token);
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: false, // Set to true if using HTTPS
-            maxAge: 3600000 // 1 hour
-        });
+       res.cookie("token", token, {
+    httpOnly: true,
+    secure: false,         // true only in production HTTPS
+    sameSite: "lax",       // required for cross-origin cookies
+    maxAge: 3600000        // 1 hour
+});
+
         res.send(user);
 
     } catch (err) {

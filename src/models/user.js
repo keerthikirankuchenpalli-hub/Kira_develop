@@ -61,7 +61,7 @@ const userSchema = new mongoose.Schema(
     photoUrl: {
       type: String,
       default:
-        "http://static.everypixel.com/ep-pixabay/0329/8099/0858/84037/3298099085884037069-head.png",
+        "https://randomuser.me/api/portraits/men/1.jpg",
       validate(value) {
         if (!validator.isURL(value)) {
           throw new Error("Photo URL is not valid: " + value);
