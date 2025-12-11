@@ -13,17 +13,14 @@ const validateSignUpData = (req) => {
         skills
     } = req.body;
 
-    // 1. Required name fields
     if (!FirstName || !LastName) {
         throw new Error("Name fields cannot be empty");
     }
 
-    // 2. First name length validation
     if (FirstName.length < 4 || FirstName.length > 30) {
         throw new Error("FirstName must be between 4 and 30 characters");
     }
 
-    // 3. Email required + valid
     if (!Email) {
         throw new Error("Email is required");
     }
@@ -31,15 +28,31 @@ const validateSignUpData = (req) => {
         throw new Error("Email is not valid: " + Email);
     }
 
-    // 4. Password required + strong
     if (!Password) {
         throw new Error("Password is required");
     }
     if (!validator.isStrongPassword(Password)) {
         throw new Error("Password is not strong enough");
     }
+    if (photoUrl && !validator.isURL(photoUrl)) {
+        throw new Error("Photo URL is not valid: " + photoUrl);
+    }
+    if (age && (age < 18 || age > 65)) {
+        throw new Error("Age must be between 18 and 65");
+    }
+    if (gender && !["male", "female ", "other"].includes(gender)) {
+        throw new Error("Gender data is not valid");        
+    }
+    if (skills && !Array.isArray(skills)) {
+        throw new Error("Skills must be an array");
+    }
+    if (skills && skills.length > 5) {
+        throw new Error("Skills count exceeds the limit");
+    }
+    if (about && about.length > 500) {          
+        throw new Error("About section exceeds maximum length of 500 characters");
+    }
 
-    // You can add optional validations for age, gender, skills, etc.
 };
 
 const validateEditProfileData = (req) => {
@@ -52,11 +65,21 @@ const validateEditProfileData = (req) => {
         "about",
         "skills"
     ];
-   const isEditAllowed = Object.keys(req.body).every((field) => allowedEditFields.includes(field)
-);
 
-return isEditAllowed;
-}
+    const sentFields = Object.keys(req.body);
+    console.log("FIELDS SENT FROM FRONTEND:", sentFields);
+
+    const isEditAllowed = sentFields.every((field) =>
+        allowedEditFields.includes(field)
+    );
+
+    if (!isEditAllowed) {
+        console.log("❌ INVALID FIELD FOUND:", sentFields.filter(f => !allowedEditFields.includes(f)));
+    }
+
+    return isEditAllowed;
+};
+
 
 
 

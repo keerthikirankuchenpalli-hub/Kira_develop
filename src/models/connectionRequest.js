@@ -27,9 +27,6 @@ toUserId: {
 connectionRequestSchema.index({FirstName: "keerthi kiran", LastName: "kuchenpalli"});
 
 
-// connectionRequestSchema.index({ fromUserId: 1 });
-// connectionRequestSchema.index({ gender : 1});
-
 
 connectionRequestSchema.pre('save', function(next) {
 

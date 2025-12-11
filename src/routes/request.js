@@ -6,14 +6,6 @@ const ConnectionRequest = require('../models/connectionRequest');
 
 const Usermodel = require("../models/user");
 
-// requestRouter.post("/sendConnectionRequest", userAuth, async (req, res) => {
-// const user = req.user;
-//     console.log("Sending Connection Request ");
-
-//     res.send("Connection Request Sent");
-
-//     res.send(user.FirstName + "sent the connection request");
-// });
 
 requestRouter.post("/request/send/:status/:toUserId", userAuth, async (req, res) => {
  try {

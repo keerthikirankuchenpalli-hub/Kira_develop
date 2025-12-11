@@ -7,18 +7,26 @@ const Usermodel = require("../models/user");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 
+
 profileRouter.get("/profile/view", userAuth, async (req, res) => {
-    try {
-        const user = req.user; // user attached by userAuth middleware
-        res.send(user); // Send the user data as response
-    } catch (error) {
-        console.log("Error retrieving user profile:", error);
-        return res.status(500).send("Internal Server Error"); // Return here to avoid sending multiple responses
+  try {
+    console.log("SERVER: GET /profile/view - cookies:", req.cookies);
+    console.log("SERVER: GET /profile/view - headers.authorization:", req.headers.authorization);
+    console.log("SERVER: user attached by middleware:", req.user);
+    if (!req.user) {
+      return res.status(401).json({ message: "Not authenticated" });
     }
+    res.json(req.user);
+  } catch (error) {
+    console.log("Error retrieving user profile:", error);
+    return res.status(500).send("Internal Server Error");
+  }
 });
+
 
 profileRouter.patch("/profile/edit", userAuth, async (req, res) => {
     try {
+        console.log("PATCH BODY RECEIVED:", req.body);
         if (!validateEditProfileData(req)) {
             throw new Error("Invalid profile data");
         }
@@ -64,7 +72,6 @@ profileRouter.post("/forgot-password", async (req, res) => {
     }
 });
 
-// -------------------- Reset Password --------------------
 profileRouter.post("/reset-password/:token", async (req, res) => {
     try {
         const resetToken = req.params.token;

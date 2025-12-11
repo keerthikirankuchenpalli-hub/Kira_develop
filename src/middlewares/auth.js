@@ -19,8 +19,8 @@ const userAuth = async (req, res, next) => {
             return res.status(401).send("Unauthorized: User not found"); // Return here
         }
 
-        req.user = user; // Attach user to request object
-        next(); // Continue to next middleware or route handler
+        req.user = user; 
+        next(); 
     } catch (error) {
         console.log("Error in userAuth middleware:", error); // Log the error for debugging
         return res.status(401).send("Unauthorized: Invalid or expired token"); // Return here
