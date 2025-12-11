@@ -7,7 +7,7 @@ const UserCard = ({ user }) => {
     <div className="card bg-base-300 w-96 shadow-sm">
   <figure>
     <img
-      src="https://randomuser.me/api/portraits/men/3.jpg"
+      src={photoUrl}
       alt="photo" />
   </figure>
   <div className="card-body">
