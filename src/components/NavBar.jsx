@@ -43,12 +43,15 @@ const NavBar = () => {
         tabIndex={0}
         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
         <li>
-          <Link to = "/profile" className="justify-between">
+          <Link to = "/profile" className="justify-left">
             Profile
             <span className="badge">New</span>
           </Link>
         </li>
-        <li><a>Settings</a></li>
+        <button  className="w-full text-left"
+        onClick={() => navigate('/connections')}>
+  Connections
+</button>
         <li><button   onClick={handleLogout}>Logout</button></li>
 
       </ul>

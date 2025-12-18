@@ -1,5 +1,5 @@
 // src/components/EditProfile.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { BASE_URL } from "../utils/constants"; // optional; or replace with string
@@ -15,8 +15,11 @@ const EditProfile = ({ user }) => {
   const [about, setAbout] = useState(user?.about || "");
   const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
-  // Keep form in sync when `user` prop changes
+  // store timeout id so we can clear it
+  const toastTimeoutRef = useRef(null);
+
   useEffect(() => {
     setFirstName(user?.FirstName || "");
     setLastName(user?.LastName || "");
@@ -27,6 +30,16 @@ const EditProfile = ({ user }) => {
     setErrorMessage("");
     setSuccessMessage("");
   }, [user]);
+
+  // cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+        toastTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   const saveChanges = async () => {
     setErrorMessage("");
@@ -47,21 +60,30 @@ const EditProfile = ({ user }) => {
         }),
       });
 
+      // try parse; if non-json this will throw and land in catch
       const data = await res.json();
 
       if (!res.ok) {
-        // backend might return { message: "..." } or throw
         setErrorMessage(data.message || "Failed to update profile");
         return;
       }
 
-      // backend response shape may be { message, data: user } or user
       const updatedUser = data.data ? data.data : data;
-
-      // update redux so UI updates immediately
       dispatch(addUser(updatedUser));
 
+      // show toast, hide after 3 seconds
+      setShowToast(true);
       setSuccessMessage("Profile updated successfully!");
+
+      // clear any existing timeout first
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+      toastTimeoutRef.current = setTimeout(() => {
+        setShowToast(false);
+        toastTimeoutRef.current = null;
+      }, 3000);
+
     } catch (err) {
       console.error("Error updating profile:", err);
       setErrorMessage("Network error while updating profile.");
@@ -78,6 +100,12 @@ const EditProfile = ({ user }) => {
     setAbout(user?.about || "");
     setErrorMessage("");
     setSuccessMessage("");
+    // also hide toast if user cancels
+    setShowToast(false);
+    if (toastTimeoutRef.current) {
+      clearTimeout(toastTimeoutRef.current);
+      toastTimeoutRef.current = null;
+    }
   };
 
   return (
@@ -162,9 +190,19 @@ const EditProfile = ({ user }) => {
             Cancel
           </button>
         </div>
+
+        {/* === TOAST: render only when showToast is true === */}
+        {showToast && (
+          <div className="toast toast-top toast-center my-4 z-50">
+            <div className="alert alert-success shadow-lg">
+              <span>Saved Changes successfully.</span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
 };
 
 export default EditProfile;
+
