@@ -11,7 +11,7 @@ const requestRouter = require('./routes/request');
 const userRouter = require('./routes/user');
 const feedRouter = require("./routes/feed");
 
-// CORS (must be first)
+
 app.use(cors({
   origin: "http://localhost:5173",
   credentials: true
@@ -20,14 +20,13 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// Register routes BEFORE starting server
 app.use("/", authRouter);
 app.use("/", profileRouter);
 app.use("/", requestRouter);
 app.use("/", userRouter);
-app.use("/feed", feedRouter);  // <-- ONLY ONE FEED ROUTE HERE
+app.use("/feed", feedRouter);  
 
-// Start server after DB connects
+
 connectDB()
   .then(() => {
     console.log("Database connected successfully");
