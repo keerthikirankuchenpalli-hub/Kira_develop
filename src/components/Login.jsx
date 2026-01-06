@@ -16,11 +16,15 @@ const Login = () => {
   // console.log("FINAL URL:", `${BASE_URL}/login`);
 
     try {
-    const res = await axios.post(
-  `${BASE_URL}/login`,
-  { Email: Email, Password: Password },
-  { withCredentials: true }
+   const res = await axios.post(
+  BASE_URL + "/login",
+  {
+    Email,
+    Password
+  },
+  { withCredentials: true } 
 );
+
 
  console.log("Login success:", res.data);
  dispatch(addUser(res.data));

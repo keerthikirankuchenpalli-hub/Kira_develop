@@ -46,6 +46,7 @@ const Connections = () => {
                         <p>{About}</p>
                     </div>
                 </div>
+               
   </div>
 </div>
             );

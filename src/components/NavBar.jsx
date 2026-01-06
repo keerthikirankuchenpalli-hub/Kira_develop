@@ -52,6 +52,10 @@ const NavBar = () => {
         onClick={() => navigate('/connections')}>
   Connections
 </button>
+ <button  className="w-full text-left"
+        onClick={() => navigate('/requests')}>
+  requests
+</button>
         <li><button   onClick={handleLogout}>Logout</button></li>
 
       </ul>
