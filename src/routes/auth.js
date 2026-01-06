@@ -26,48 +26,58 @@ authRouter.post("/signup", async (req, res) => {
             skills: req.body.skills
         });
 
-        await newUser.save();
+        const savedUser = await newUser.save();
+          const token = await savedUser.getJWT();
+      
+       res.cookie("token", token, {
+    httpOnly: true,
+    secure: false,        
+    sameSite: "lax",       
+    maxAge: 3600000       
+});
 
-        res.status(201).send("User created successfully");
+
+        res.json({ message: "User created successfully", data: savedUser });
     } catch (err) {
         res.status(400).send("ERROR: " + err.message);
     }
 });
 
 authRouter.post("/login", async (req, res) => {
-    try {
-        const { Email, Password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-        const user = await UserModel.findOne({ Email });
-      
-
-        if (!user) {
-            throw new Error("invalid credentials");
-        }
-
-        
-        const isPasswordValid = await user.validatePassword(Password);
-        
-        if (!isPasswordValid) {
-
-            throw new Error("invalid credentials");
-            
-        }
-        const token = await user.getJWT();
-      
-       res.cookie("token", token, {
-    httpOnly: true,
-    secure: false,         // true only in production HTTPS
-    sameSite: "lax",       // required for cross-origin cookies
-    maxAge: 3600000        // 1 hour
-});
-
-        res.send(user);
-
-    } catch (err) {
-        res.status(400).send("ERROR: " + err.message);
+    if (!email || !password) {
+      return res.status(400).send("Email and password are required");
     }
+
+    const user = await UserModel.findOne({ email });
+
+    if (!user) {
+      throw new Error("invalid credentials");
+    }
+
+    const isPasswordValid = await user.validatePassword(password);
+
+    if (!isPasswordValid) {
+      throw new Error("invalid credentials");
+    }
+
+    const token = await user.getJWT();
+
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      maxAge: 3600000
+    });
+
+    res.send(user);
+  } catch (err) {
+    res.status(400).send("ERROR: " + err.message);
+  }
 });
+
 
 authRouter.post("/logout", async (req, res) => {
 res.cookie("token", null,{

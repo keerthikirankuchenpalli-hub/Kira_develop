@@ -33,7 +33,7 @@ requestRouter.post("/request/send/:status/:toUserId", userAuth, async (req, res)
         { toUserId: fromUserId, fromUserId: toUserId },
     ]
 });
-if (existingRequest) {  // Check if the request already exists
+if (existingRequest) {  
     return res
     .status(400)
     .json({ message: 'Connection request already exists between these users.' });

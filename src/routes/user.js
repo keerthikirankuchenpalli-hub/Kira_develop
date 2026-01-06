@@ -102,7 +102,7 @@ userRouter.get("/feed", userAuth, async (req, res) => {
         });
 
     } catch (err) {
-        console.error("❌ FEED ERROR:", err);
+        console.error(" FEED ERROR:", err);
         res.status(500).json({ error: err.message });
     }
 });

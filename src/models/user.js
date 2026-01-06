@@ -17,18 +17,19 @@ const userSchema = new mongoose.Schema(
       type: String,
     },
 
-    Email: {
-      type: String,
-      required: true,
-      unique: true,
-      lowercase: true,
-      trim: true,
-      validate(value) {
-        if (!validator.isEmail(value)) {
-          throw new Error("Email is not valid: " + value);
-        }
-      },
-    },
+   Email: {
+  type: String,
+  required: true,
+  unique: true,
+  lowercase: true,
+  trim: true,
+  validate(value) {
+    if (!validator.isEmail(value)) {
+      throw new Error("Email is not valid: " + value);
+    }
+  },
+},
+
 
     Password: {
       type: String,
